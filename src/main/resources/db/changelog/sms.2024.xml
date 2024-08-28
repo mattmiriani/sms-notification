@@ -19,20 +19,145 @@
     </changeSet>
 
     <changeSet id="20240826225900" author="Matheus">
+        <createTable tableName="plan">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="limit" type="decimal(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="credit_limit" type="decimal(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="boolean" defaultValue="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20240827224700" author="Matheus">
         <createTable tableName="customer">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(100)"/>
-            <column name="email" type="varchar"/>
-            <column name="phone" type="varchar(11)"/>
-            <column name="cpf" type="varchar(11)"/>
-            <column name="cnpj" type="varchar(14)"/>
-            <column name="company_name" type="varchar(100)"/>
-            <column name="created_at" type="timestamp"/>
-            <column name="updated_at" type="timestamp"/>
-            <column name="active" type="boolean" defaultValue="true"/>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="varchar(11)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cpf" type="varchar(11)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="cnpj" type="varchar(14)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="company_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="boolean" defaultValue="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance" type="decimal(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="credit_limit" type="decimal(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="plan_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+
+        <addForeignKeyConstraint baseTableName="customer"
+                                 baseColumnNames="plan_id"
+                                 constraintName="fk_customer_plan"
+                                 referencedTableName="plan"
+                                 referencedColumnNames="id"/>
+        <createIndex tableName="customer" indexName="idx_customer_plan">
+            <column name="plan_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20240827225700" author="Matheus">
+        <createTable tableName="message">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="phone_number" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_whatsapp" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="message"
+                                 baseColumnNames="customer_id"
+                                 constraintName="fk_message_customer"
+                                 referencedTableName="customer"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="20240827231000" author="Matheus">
+        <insert tableName="plan">
+            <column name="type" value="Prepaid"/>
+            <column name="limit" value="0.05"/>
+            <column name="credit_limit" value="1000.00"/>
+            <column name="active" value="true"/>
+            <column name="created_at" valueDate="2024-08-27T10:00:00"/>
+            <column name="updated_at" valueDate="2024-08-27T10:00:00"/>
+        </insert>
+
+        <insert tableName="customer">
+            <column name="name" value="admin"/>
+            <column name="email" value="admin@example.com"/>
+            <column name="phone" value="11987654321"/>
+            <column name="cpf" value="12345678900"/>
+            <column name="cnpj" value="12345678000195"/>
+            <column name="company_name" value="Admin Company"/>
+            <column name="created_at" valueDate="2024-08-27T10:00:00"/>
+            <column name="updated_at" valueDate="2024-08-27T10:00:00"/>
+            <column name="active" value="true"/>
+            <column name="balance" value="500.00"/>
+            <column name="credit_limit" value="1000.00"/>
+            <column name="plan_id" valueComputed="(select id from plan where type = 'BASIC')"/>
+        </insert>
+
+        <insert tableName="message">
+            <column name="phone_number" value="11987654321"/>
+            <column name="is_whatsapp" value="true"/>
+            <column name="text" value="Welcome to Big Chat Brasil!"/>
+            <column name="customer_id" valueComputed="(select id from customer where email = 'admin@example.com')"/>
+            <column name="created_at" valueDate="2024-08-27T10:00:00"/>
+        </insert>
     </changeSet>
 
 </databaseChangeLog>

@@ -21,6 +21,8 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/sms.2024.xml
     default-schema: public
+  app:
+    prefix: /api/v1/sms
 
 server:
   port: 8080

@@ -1,16 +1,17 @@
 package com.example.sms.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.example.sms.config.exception.SmsException;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.http.HttpStatus;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -55,6 +56,16 @@ public class Customer implements Serializable {
     @Column(name = "active", nullable = false)
     private Boolean active;
 
+    @Column(name = "balance", nullable = false)
+    private BigDecimal balance;
+
+    @Column(name = "credit_limit", nullable = false)
+    private BigDecimal creditLimit;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plan_id", nullable = false)
+    private Plan plan;
+
     public Customer(Customer customer) {
         this.id = UUID.randomUUID();
         this.name = customer.getName();
@@ -66,5 +77,39 @@ public class Customer implements Serializable {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.active = Boolean.TRUE;
+    }
+
+    public void addCredit(BigDecimal credit) {
+        this.balance = this.balance.add(credit);
+    }
+
+    public BigDecimal checkBalance() {
+        return this.balance.subtract(this.creditLimit);
+    }
+
+    public void changeLimit(BigDecimal newLimit) {
+        if (newLimit.compareTo(BigDecimal.ZERO) < 0) {
+            throw new SmsException(HttpStatus.BAD_REQUEST, "Limit must be greater than zero");
+        }
+
+        this.creditLimit = newLimit;
+    }
+
+    public void changePlan(Plan plan) {
+        if (!plan.getActive()) {
+            throw new SmsException(HttpStatus.BAD_REQUEST, "Plan not active");
+        }
+
+        this.plan = plan;
+    }
+
+    public void mergeForUpdate(Customer customer) {
+        this.name = customer.getName();
+        this.email = customer.getEmail();
+        this.phone = customer.getPhone();
+        this.cpf = customer.getCpf();
+        this.cnpj = customer.getCnpj();
+        this.companyName = customer.getCompanyName();
+        this.updatedAt = LocalDateTime.now();
     }
 }
