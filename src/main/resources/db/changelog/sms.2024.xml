@@ -148,7 +148,7 @@
             <column name="active" value="true"/>
             <column name="balance" value="500.00"/>
             <column name="credit_limit" value="1000.00"/>
-            <column name="plan_id" valueComputed="(select id from plan where type = 'BASIC')"/>
+            <column name="plan_id" valueComputed="(select id from plan where type = 'Prepaid')"/>
         </insert>
 
         <insert tableName="message">

@@ -17,6 +17,7 @@ public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(generator = "UUID")
     @Column(name = "id", nullable = false, unique = true)
     private UUID id;
 
@@ -29,10 +30,18 @@ public class Message implements Serializable {
     @Column(name = "text", nullable = false)
     private String text;
 
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    public Message(Message message) {
+        this.phoneNumber = message.getPhoneNumber();
+        this.isWhatsApp = message.isWhatsApp();
+        this.text = message.getText();
+        this.createdAt = LocalDateTime.now();
+        this.customer = message.getCustomer();
+    }
 }

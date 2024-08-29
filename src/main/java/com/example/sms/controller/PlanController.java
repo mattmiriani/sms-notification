@@ -1,7 +1,8 @@
 package com.example.sms.controller;
 
 import com.example.sms.dto.PageableDTO;
-import com.example.sms.entity.Plan;
+import com.example.sms.dto.PlanDTO;
+import com.example.sms.mapper.PlanMapper;
 import com.example.sms.service.PlanService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,39 +20,50 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class PlanController {
 
     private final PlanService planService;
+    private final PlanMapper planMapper;
 
     @GetMapping
-    public ResponseEntity<Page<Plan>> findAll(PageableDTO pageableDTO) {
+    public ResponseEntity<Page<PlanDTO>> findAll(PageableDTO pageableDTO) {
         try {
-            return ResponseEntity.ok(planService.findAll(pageableDTO.getPageable()));
+            var response = planService.findAll(pageableDTO.getPageable());
+
+            return ResponseEntity.ok(response.map(planMapper::planToPlanDTO));
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Plan> findById(@PathVariable("id") UUID planId) {
+    public ResponseEntity<PlanDTO> findById(@PathVariable("id") UUID planId) {
         try {
-            return ResponseEntity.ok(planService.findById(planId));
+            var response = planService.findById(planId);
+
+            return ResponseEntity.ok(planMapper.planToPlanDTO(response));
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<Plan> create(@RequestBody Plan plan) {
+    public ResponseEntity<PlanDTO> create(@RequestBody PlanDTO planDTO) {
         try {
-            return ResponseEntity.status(CREATED).body(planService.create(plan));
+            var plan = planMapper.planDTOToPlan(planDTO);
+            var response = planService.create(plan);
+
+            return ResponseEntity.status(CREATED).body(planMapper.planToPlanDTO(response));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Plan> update(@PathVariable("id") UUID planId,
-                                       @RequestBody Plan plan) {
+    public ResponseEntity<PlanDTO> update(@PathVariable("id") UUID planId,
+                                          @RequestBody PlanDTO planDTO) {
         try {
-            return ResponseEntity.ok(planService.update(planId, plan));
+            var plan = planMapper.planDTOToPlan(planDTO);
+            var response = planService.update(planId, plan);
+
+            return ResponseEntity.ok(planMapper.planToPlanDTO(response));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }

@@ -1,6 +1,7 @@
 package com.example.sms.controller;
 
-import com.example.sms.entity.Message;
+import com.example.sms.dto.MessageDTO;
+import com.example.sms.mapper.MessageMapper;
 import com.example.sms.service.MessageService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessageController {
 
     private final MessageService messageService;
+    private final MessageMapper messageMapper;
 
     @PostMapping
-    public ResponseEntity<Message> send(@RequestBody Message message) {
+    public ResponseEntity<MessageDTO> send(@RequestBody MessageDTO messageDTO) {
         try {
-            return ResponseEntity.ok(messageService.send(message));
+            var message = messageMapper.messageDTOToMessage(messageDTO);
+            var response = messageService.send(message);
+
+            return ResponseEntity.ok(messageMapper.messageToMessageDTO(response));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(null);
         }
     }

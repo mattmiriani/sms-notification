@@ -1,7 +1,7 @@
 package com.example.sms.service;
 
-import com.example.sms.entity.Customer;
 import com.example.sms.config.exception.SmsException;
+import com.example.sms.entity.Customer;
 import com.example.sms.objetoveiw.CustomerBalanceImplementation;
 import com.example.sms.objetoveiw.CustomerBalanceVO;
 import com.example.sms.repository.CustomerRepository;
@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +52,18 @@ public class CustomerService {
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Customer create(Customer customer) {
+        var validatedPlan = planService.findById(customer.getPlan().getId());
+        this.verifyCPF(customer.getCpf());
+
+        customer.setPlan(validatedPlan);
+
         return this.save(new Customer(customer));
+    }
+
+    private void verifyCPF(String cpf) {
+        if (customerRepository.existsByCpf(cpf)) {
+            throw new SmsException(HttpStatus.BAD_REQUEST, "Customer already exists!");
+        }
     }
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)

@@ -1,7 +1,8 @@
 package com.example.sms.controller;
 
+import com.example.sms.dto.CustomerDTO;
 import com.example.sms.dto.PageableDTO;
-import com.example.sms.entity.Customer;
+import com.example.sms.mapper.CustomerMapper;
 import com.example.sms.objetoveiw.CustomerBalanceVO;
 import com.example.sms.service.CustomerService;
 import lombok.AllArgsConstructor;
@@ -21,22 +22,30 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final CustomerMapper customerMapper;
 
     @GetMapping
-    public ResponseEntity<Page<Customer>> findAll(@RequestBody PageableDTO pageableDTO) {
-
+    public ResponseEntity<Page<CustomerDTO>> findAll(PageableDTO pageableDTO) {
         try {
-            return ResponseEntity.ok(customerService.findAll(pageableDTO.getPageable()));
+            var response = customerService.findAll(pageableDTO.getPageable());
+
+            return ResponseEntity.ok(response.map(customerMapper::customerToCustomerDTO));
         } catch (Exception e) {
+            e.printStackTrace();
+
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> findById(@PathVariable("id") UUID customerId) {
+    public ResponseEntity<CustomerDTO> findById(@PathVariable("id") UUID customerId) {
         try {
-            return ResponseEntity.ok(customerService.findById(customerId));
+            var response = customerService.findById(customerId);
+
+            return ResponseEntity.ok(customerMapper.customerToCustomerDTO(response));
         } catch (Exception e) {
+            e.printStackTrace();
+
             return ResponseEntity.notFound().build();
         }
     }
@@ -46,25 +55,37 @@ public class CustomerController {
         try {
             return ResponseEntity.ok(customerService.findBalance(customerId));
         } catch (Exception e) {
+            e.printStackTrace();
+
             return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<Customer> create(@RequestBody Customer customer) {
+    public ResponseEntity<CustomerDTO> create(@RequestBody CustomerDTO customerDTO) {
         try {
-            return ResponseEntity.status(CREATED).body(customerService.create(customer));
+            var customer = customerMapper.customerDTOToCustomer(customerDTO);
+            var response = customerService.create(customer);
+
+            return ResponseEntity.status(CREATED).body(customerMapper.customerToCustomerDTO(response));
         } catch (Exception e) {
+            e.printStackTrace();
+
             return ResponseEntity.badRequest().body(null);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Customer> update(@PathVariable("id") UUID customerId,
-                                           @RequestBody Customer customer) {
+    public ResponseEntity<CustomerDTO> update(@PathVariable("id") UUID customerId,
+                                              @RequestBody CustomerDTO customerDTO) {
         try {
-            return ResponseEntity.ok(customerService.update(customerId, customer));
+            var customer = customerMapper.customerDTOToCustomerUpdate(customerDTO);
+            var response = customerService.update(customerId, customer);
+
+            return ResponseEntity.ok(customerMapper.customerToCustomerDTOUpdate(response));
         } catch (Exception e) {
+            e.printStackTrace();
+
             return ResponseEntity.badRequest().body(null);
         }
     }
@@ -76,6 +97,8 @@ public class CustomerController {
             customerService.addCredit(customerId, credit);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
+            e.printStackTrace();
+
             return ResponseEntity.badRequest().body(null);
         }
     }
@@ -87,6 +110,8 @@ public class CustomerController {
             customerService.changeLimit(customerId, limit);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
+            e.printStackTrace();
+
             return ResponseEntity.badRequest().body(null);
         }
     }
@@ -98,6 +123,8 @@ public class CustomerController {
         customerService.changePlan(customerId, planId);
         return ResponseEntity.ok().build();
         } catch (Exception e) {
+            e.printStackTrace();
+
             return ResponseEntity.badRequest().body(null);
         }
     }
@@ -108,6 +135,8 @@ public class CustomerController {
             customerService.delete(customerId);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
+            e.printStackTrace();
+
             return ResponseEntity.notFound().build();
         }
     }

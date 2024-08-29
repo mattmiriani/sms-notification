@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ public class Customer implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(generator = "UUID")
     @Column(name = "id", nullable = false, unique = true)
     private UUID id;
 
@@ -67,7 +69,6 @@ public class Customer implements Serializable {
     private Plan plan;
 
     public Customer(Customer customer) {
-        this.id = UUID.randomUUID();
         this.name = customer.getName();
         this.email = customer.getEmail();
         this.phone = customer.getPhone();
@@ -77,6 +78,9 @@ public class Customer implements Serializable {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.active = Boolean.TRUE;
+        this.balance = customer.getBalance();
+        this.creditLimit = customer.getCreditLimit();
+        this.plan = customer.getPlan();
     }
 
     public void addCredit(BigDecimal credit) {
@@ -107,8 +111,6 @@ public class Customer implements Serializable {
         this.name = customer.getName();
         this.email = customer.getEmail();
         this.phone = customer.getPhone();
-        this.cpf = customer.getCpf();
-        this.cnpj = customer.getCnpj();
         this.companyName = customer.getCompanyName();
         this.updatedAt = LocalDateTime.now();
     }

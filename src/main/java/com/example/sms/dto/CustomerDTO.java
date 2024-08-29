@@ -1,11 +1,15 @@
 package com.example.sms.dto;
 
 import com.example.sms.entity.Plan;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Getter
+@Setter
 public class CustomerDTO {
 
     private UUID id;
@@ -20,6 +24,6 @@ public class CustomerDTO {
     private Boolean active;
     private BigDecimal balance;
     private BigDecimal creditLimit;
-    private Plan plan;
+    private PlanDTO plan;
 
 }

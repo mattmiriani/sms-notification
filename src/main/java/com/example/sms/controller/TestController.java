@@ -1,8 +1,10 @@
 package com.example.sms.controller;
 
+import com.example.sms.config.exception.SmsException;
 import com.example.sms.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,11 @@ public class TestController {
                         hostName, osName, osVersion, availableProcessors, freeMemory / (1024 * 1024), totalMemory / (1024 * 1024)
                 )
         );
+    }
+
+    @GetMapping("/error")
+    public void throwError() {
+        throw new SmsException(HttpStatus.BAD_REQUEST, "Test exception message");
     }
 
     private String getHostName() {

@@ -13,9 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class MessageService {
 
     private final MessageRepository messageRepository;
+    private final CustomerService customerService;
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Message send(Message message) {
-        return messageRepository.save(message);
+        var validatedCustomer = customerService.findById(message.getCustomer().getId());
+
+        message.setCustomer(validatedCustomer);
+
+        return messageRepository.save(new Message(message));
     }
 }
