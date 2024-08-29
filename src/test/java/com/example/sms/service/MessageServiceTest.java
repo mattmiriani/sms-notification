@@ -3,9 +3,9 @@ package com.example.sms.service;
 import com.example.sms.entity.Customer;
 import com.example.sms.entity.Message;
 import com.example.sms.entity.Plan;
+import com.example.sms.enumeration.PlanType;
 import com.example.sms.exception.SmsException;
 import com.example.sms.repository.MessageRepository;
-import com.example.sms.enumeration.PlanType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +19,8 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class MessageServiceTest {

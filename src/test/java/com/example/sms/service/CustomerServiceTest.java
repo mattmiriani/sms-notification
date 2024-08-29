@@ -3,7 +3,6 @@ package com.example.sms.service;
 import com.example.sms.entity.Customer;
 import com.example.sms.entity.Plan;
 import com.example.sms.exception.SmsException;
-import com.example.sms.objetoveiw.CustomerBalanceVO;
 import com.example.sms.repository.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
