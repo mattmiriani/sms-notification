@@ -1,13 +1,9 @@
 package com.example.sms.entity;
 
-import com.example.sms.config.exception.SmsException;
+import com.example.sms.exception.SmsException;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.validator.constraints.br.CNPJ;
-import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.http.HttpStatus;
 
 import java.io.Serial;
@@ -31,18 +27,15 @@ public class Customer implements Serializable {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Email
     @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "phone", nullable = false, length = 11)
     private String phone;
 
-    @CPF
     @Column(name = "cpf", nullable = false, unique = true, length = 11)
     private String cpf;
 
-    @CNPJ
     @Column(name = "cnpj", nullable = false, unique = true, length = 14)
     private String cnpj;
 
@@ -58,11 +51,11 @@ public class Customer implements Serializable {
     @Column(name = "active", nullable = false)
     private Boolean active;
 
-    @Column(name = "balance", nullable = false)
-    private BigDecimal balance;
+    @Column(name = "current_funds", nullable = false)
+    private BigDecimal currentFunds;
 
-    @Column(name = "credit_limit", nullable = false)
-    private BigDecimal creditLimit;
+    @Column(name = "credit", nullable = false)
+    private BigDecimal credit;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plan_id", nullable = false)
@@ -78,32 +71,25 @@ public class Customer implements Serializable {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.active = Boolean.TRUE;
-        this.balance = customer.getBalance();
-        this.creditLimit = customer.getCreditLimit();
-        this.plan = customer.getPlan();
+        this.currentFunds = customer.getCurrentFunds();
+
+        this.changePlan(customer.getPlan());
     }
 
     public void addCredit(BigDecimal credit) {
-        this.balance = this.balance.add(credit);
+        this.credit = this.credit.add(credit);
     }
 
-    public BigDecimal checkBalance() {
-        return this.balance.subtract(this.creditLimit);
-    }
-
-    public void changeLimit(BigDecimal newLimit) {
-        if (newLimit.compareTo(BigDecimal.ZERO) < 0) {
-            throw new SmsException(HttpStatus.BAD_REQUEST, "Limit must be greater than zero");
-        }
-
-        this.creditLimit = newLimit;
+    public void addFunds(BigDecimal funds) {
+        this.credit = this.currentFunds.add(funds);
     }
 
     public void changePlan(Plan plan) {
         if (!plan.getActive()) {
-            throw new SmsException(HttpStatus.BAD_REQUEST, "Plan not active");
+            throw new SmsException(HttpStatus.NOT_FOUND, "Plan not found!");
         }
 
+        this.credit = plan.getCredit();
         this.plan = plan;
     }
 

@@ -1,5 +1,6 @@
 package com.example.sms.controller;
 
+import com.example.sms.exception.SmsException;
 import com.example.sms.dto.PageableDTO;
 import com.example.sms.dto.PlanDTO;
 import com.example.sms.mapper.PlanMapper;
@@ -17,7 +18,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @AllArgsConstructor(onConstructor_ = @__(@Autowired))
 @RestController
 @RequestMapping("/plans")
-public class PlanController {
+public class PlanController extends ControllerDefault {
 
     private final PlanService planService;
     private final PlanMapper planMapper;
@@ -28,8 +29,9 @@ public class PlanController {
             var response = planService.findAll(pageableDTO.getPageable());
 
             return ResponseEntity.ok(response.map(planMapper::planToPlanDTO));
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+        } catch (SmsException e) {
+
+            throw new SmsException(e.getStatus(), e.getMessage());
         }
     }
 
@@ -39,8 +41,9 @@ public class PlanController {
             var response = planService.findById(planId);
 
             return ResponseEntity.ok(planMapper.planToPlanDTO(response));
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+        } catch (SmsException e) {
+
+            throw new SmsException(e.getStatus(), e.getMessage());
         }
     }
 
@@ -51,8 +54,9 @@ public class PlanController {
             var response = planService.create(plan);
 
             return ResponseEntity.status(CREATED).body(planMapper.planToPlanDTO(response));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+        } catch (SmsException e) {
+
+            throw new SmsException(e.getStatus(), e.getMessage());
         }
     }
 
@@ -64,8 +68,9 @@ public class PlanController {
             var response = planService.update(planId, plan);
 
             return ResponseEntity.ok(planMapper.planToPlanDTO(response));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+        } catch (SmsException e) {
+
+            throw new SmsException(e.getStatus(), e.getMessage());
         }
     }
 
@@ -74,8 +79,9 @@ public class PlanController {
         try {
             planService.delete(planId);
             return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+        } catch (SmsException e) {
+
+            throw new SmsException(e.getStatus(), e.getMessage());
         }
     }
 }

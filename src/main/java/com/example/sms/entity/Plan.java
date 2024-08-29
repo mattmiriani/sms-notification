@@ -26,11 +26,11 @@ public class Plan implements Serializable {
     @Column(name = "type", nullable = false)
     private PlanType type;
 
-    @Column(name = "limit", nullable = false)
-    private BigDecimal smsCost;
+    @Column(name = "message_amount", nullable = false)
+    private BigDecimal messageAmount;
 
-    @Column(name = "credit_limit", nullable = false)
-    private BigDecimal creditLimit;
+    @Column(name = "credit", nullable = false)
+    private BigDecimal credit;
 
     @Column(name = "active", nullable = false)
     private Boolean active;
@@ -44,7 +44,8 @@ public class Plan implements Serializable {
     public Plan(Plan plan) {
         this.id = UUID.randomUUID();
         this.type = plan.getType();
-        this.smsCost = plan.getSmsCost();
+        this.messageAmount = plan.getMessageAmount();
+        this.credit = plan.getCredit();
         this.active = Boolean.TRUE;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
@@ -52,7 +53,8 @@ public class Plan implements Serializable {
 
     public void mergeForUpdate(Plan plan) {
         this.type = plan.getType();
-        this.smsCost = plan.getSmsCost();
+        this.messageAmount = plan.getMessageAmount();
+        this.credit = plan.getCredit();
         this.updatedAt = LocalDateTime.now();
     }
 }

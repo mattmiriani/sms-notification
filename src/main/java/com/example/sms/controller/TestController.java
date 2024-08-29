@@ -1,6 +1,6 @@
 package com.example.sms.controller;
 
-import com.example.sms.config.exception.SmsException;
+import com.example.sms.exception.SmsException;
 import com.example.sms.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.net.UnknownHostException;
 @AllArgsConstructor(onConstructor_ = @__(@Autowired))
 @RestController
 @RequestMapping("/test")
-public class TestController {
+public class TestController extends ControllerDefault {
 
     private final CustomerService customerService;
 

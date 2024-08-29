@@ -22,8 +22,8 @@ public class CustomerDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Boolean active;
-    private BigDecimal balance;
-    private BigDecimal creditLimit;
+    private BigDecimal currentFunds;
+    private BigDecimal credit;
     private PlanDTO plan;
 
 }

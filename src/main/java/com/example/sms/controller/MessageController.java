@@ -1,5 +1,6 @@
 package com.example.sms.controller;
 
+import com.example.sms.exception.SmsException;
 import com.example.sms.dto.MessageDTO;
 import com.example.sms.mapper.MessageMapper;
 import com.example.sms.service.MessageService;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor(onConstructor_ = @__(@Autowired))
 @RestController
 @RequestMapping("/messages")
-public class MessageController {
+public class MessageController extends ControllerDefault {
 
     private final MessageService messageService;
     private final MessageMapper messageMapper;
@@ -26,9 +27,9 @@ public class MessageController {
             var response = messageService.send(message);
 
             return ResponseEntity.ok(messageMapper.messageToMessageDTO(response));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body(null);
+        } catch (SmsException e) {
+
+            throw new SmsException(e.getStatus(), e.getMessage());
         }
     }
 }

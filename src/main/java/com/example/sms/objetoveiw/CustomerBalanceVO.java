@@ -1,8 +1,11 @@
 package com.example.sms.objetoveiw;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 public interface CustomerBalanceVO {
+
     String getCustomerName();
-    BigDecimal getBalance();
+    Map<String, BigDecimal> getBalance();
+
 }

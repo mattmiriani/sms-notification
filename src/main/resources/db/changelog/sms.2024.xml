@@ -26,10 +26,10 @@
             <column name="type" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="limit" type="decimal(15,2)">
+            <column name="message_amount" type="decimal(15,2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="credit_limit" type="decimal(15,2)">
+            <column name="credit" type="decimal(15,2)">
                 <constraints nullable="false"/>
             </column>
             <column name="active" type="boolean" defaultValue="true">
@@ -76,10 +76,10 @@
             <column name="active" type="boolean" defaultValue="true">
                 <constraints nullable="false"/>
             </column>
-            <column name="balance" type="decimal(15,2)">
+            <column name="current_funds" type="decimal(15,2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="credit_limit" type="decimal(15,2)">
+            <column name="credit" type="decimal(15,2)">
                 <constraints nullable="false"/>
             </column>
             <column name="plan_id" type="${uuid_type}">
@@ -128,15 +128,17 @@
 
     <changeSet id="20240827231000" author="Matheus">
         <insert tableName="plan">
-            <column name="type" value="Prepaid"/>
-            <column name="limit" value="0.05"/>
-            <column name="credit_limit" value="1000.00"/>
+            <column name="id" value="ed5b1f91-f37f-4201-81fb-d949421ab67b"/>
+            <column name="type" value="Credit"/>
+            <column name="message_amount" value="0.05"/>
+            <column name="credit" value="1000.00"/>
             <column name="active" value="true"/>
             <column name="created_at" valueDate="2024-08-27T10:00:00"/>
             <column name="updated_at" valueDate="2024-08-27T10:00:00"/>
         </insert>
 
         <insert tableName="customer">
+            <column name="id" value="2184be30-fce0-41ed-b06c-5385e795e0ae"/>
             <column name="name" value="admin"/>
             <column name="email" value="admin@example.com"/>
             <column name="phone" value="11987654321"/>
@@ -146,16 +148,17 @@
             <column name="created_at" valueDate="2024-08-27T10:00:00"/>
             <column name="updated_at" valueDate="2024-08-27T10:00:00"/>
             <column name="active" value="true"/>
-            <column name="balance" value="500.00"/>
-            <column name="credit_limit" value="1000.00"/>
-            <column name="plan_id" valueComputed="(select id from plan where type = 'Prepaid')"/>
+            <column name="current_funds" value="500.00"/>
+            <column name="credit" valueComputed="(select credit from plan where id = 'ed5b1f91-f37f-4201-81fb-d949421ab67b')"/>
+            <column name="plan_id" valueComputed="(select id from plan where id = 'ed5b1f91-f37f-4201-81fb-d949421ab67b')"/>
         </insert>
 
         <insert tableName="message">
+            <column name="id" value="e850a8b3-520e-4961-bc2a-735e19667bac"/>
             <column name="phone_number" value="11987654321"/>
             <column name="is_whatsapp" value="true"/>
             <column name="text" value="Welcome to Big Chat Brasil!"/>
-            <column name="customer_id" valueComputed="(select id from customer where email = 'admin@example.com')"/>
+            <column name="customer_id" valueComputed="(select id from customer where id = '2184be30-fce0-41ed-b06c-5385e795e0ae')"/>
             <column name="created_at" valueDate="2024-08-27T10:00:00"/>
         </insert>
     </changeSet>

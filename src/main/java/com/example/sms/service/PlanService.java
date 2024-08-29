@@ -1,7 +1,7 @@
 package com.example.sms.service;
 
 import com.example.sms.entity.Plan;
-import com.example.sms.config.exception.SmsException;
+import com.example.sms.exception.SmsException;
 import com.example.sms.repository.PlanRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class PlanService {
     @Transactional(readOnly = true)
     public Plan findById(UUID planId) {
         return planRepository.findById(planId).orElseThrow(
-                () -> new SmsException(HttpStatus.NOT_FOUND, "Plan not found")
+                () -> new SmsException(HttpStatus.NOT_FOUND, "Plan not found!")
         );
     }
 

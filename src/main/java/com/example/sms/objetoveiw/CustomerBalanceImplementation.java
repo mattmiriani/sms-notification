@@ -3,16 +3,17 @@ package com.example.sms.objetoveiw;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 @Setter
 public class CustomerBalanceImplementation implements CustomerBalanceVO {
 
     private String customerName;
-    private BigDecimal balance;
+    private Map<String, BigDecimal> balance;
 
-    public CustomerBalanceImplementation(String customerName, BigDecimal balance) {
+    public CustomerBalanceImplementation(String customerName, BigDecimal currentFunds, BigDecimal credit) {
         this.customerName = customerName;
-        this.balance = balance;
+        this.balance = Map.of("currentFunds", currentFunds, "credit", credit);
     }
 
     @Override
@@ -21,8 +22,7 @@ public class CustomerBalanceImplementation implements CustomerBalanceVO {
     }
 
     @Override
-    public BigDecimal getBalance() {
+    public Map<String, BigDecimal> getBalance() {
         return balance;
     }
-
 }

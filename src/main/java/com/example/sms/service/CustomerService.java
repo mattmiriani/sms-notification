@@ -1,6 +1,6 @@
 package com.example.sms.service;
 
-import com.example.sms.config.exception.SmsException;
+import com.example.sms.exception.SmsException;
 import com.example.sms.entity.Customer;
 import com.example.sms.objetoveiw.CustomerBalanceImplementation;
 import com.example.sms.objetoveiw.CustomerBalanceVO;
@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +17,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @AllArgsConstructor(onConstructor_ = @__(@Autowired))
@@ -35,7 +35,7 @@ public class CustomerService {
     @Transactional(readOnly = true)
     public Customer findById(UUID customerId) {
         return customerRepository.findById(customerId).filter(Customer::getActive).orElseThrow(
-                () -> new SmsException(NOT_FOUND, "Customer not found")
+                () -> new SmsException(NOT_FOUND, "Customer not found!")
         );
     }
 
@@ -43,7 +43,11 @@ public class CustomerService {
     public CustomerBalanceVO findBalance(UUID customerId) {
         var customer = this.findById(customerId);
 
-        return new CustomerBalanceImplementation(customer.getName(), customer.checkBalance());
+        return new CustomerBalanceImplementation(
+                customer.getName(),
+                customer.getCurrentFunds(),
+                customer.getCredit()
+        );
     }
 
     private Customer save(Customer customer) {
@@ -62,7 +66,7 @@ public class CustomerService {
 
     private void verifyCPF(String cpf) {
         if (customerRepository.existsByCpf(cpf)) {
-            throw new SmsException(HttpStatus.BAD_REQUEST, "Customer already exists!");
+            throw new SmsException(BAD_REQUEST, "Customer already exists!");
         }
     }
 
@@ -85,22 +89,22 @@ public class CustomerService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public void changeLimit(UUID customerId, BigDecimal newLimit) {
+    public void addFunds(UUID customerId, BigDecimal newLimit) {
         var customerToUpdate = this.findById(customerId);
 
-        customerToUpdate.changeLimit(newLimit);
+        customerToUpdate.addFunds(newLimit);
 
         this.save(customerToUpdate);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public Customer changePlan(UUID customerId, UUID planId) {
+    public void changePlan(UUID customerId, UUID planId) {
         var customerToUpdate = this.findById(customerId);
         var validatedPlan = planService.findById(planId);
 
         customerToUpdate.changePlan(validatedPlan);
 
-        return this.save(customerToUpdate);
+        this.save(customerToUpdate);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
