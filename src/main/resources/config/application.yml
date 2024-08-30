@@ -2,7 +2,7 @@ spring:
   application:
     name: sms
   datasource:
-    url: jdbc:postgresql://localhost:5432/mysms
+    url: jdbc:postgresql://db:5432/mysms
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: postgres
