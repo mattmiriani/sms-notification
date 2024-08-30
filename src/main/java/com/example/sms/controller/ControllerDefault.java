@@ -3,8 +3,10 @@ package com.example.sms.controller;
 import com.example.sms.exception.SmsException;
 import com.example.sms.dto.ErrorDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+@CrossOrigin(origins = "http://localhost:3000")
 public class ControllerDefault {
 
     @ExceptionHandler(SmsException.class)
