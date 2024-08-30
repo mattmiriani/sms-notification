@@ -48,7 +48,7 @@ public class PlanService {
 
         planToUpdate.mergeForUpdate(plan);
 
-        return this.save(plan);
+        return planRepository.save(planToUpdate);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)

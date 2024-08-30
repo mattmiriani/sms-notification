@@ -20,7 +20,7 @@ public class MessageController extends ControllerDefault {
     private final MessageService messageService;
     private final MessageMapper messageMapper;
 
-    @PostMapping
+    @PostMapping("/send")
     public ResponseEntity<MessageDTO> send(@RequestBody MessageDTO messageDTO) {
         try {
             var message = messageMapper.messageDTOToMessage(messageDTO);

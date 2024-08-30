@@ -3,18 +3,17 @@ spring:
     name: sms
   datasource:
     url: jdbc:postgresql://localhost:5432/mysms
-    # noinspection SpringBootApplicationYaml
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: postgres
   jpa:
-    properties.hibernate:
-      generate_statistics: false
-      order_by:
-        default_null_ordering: last
+    properties:
+      hibernate:
+        generate_statistics: false
+        order_by:
+          default_null_ordering: last
     hibernate:
-      # noinspection SpringBootApplicationYaml
-      dialect: org.hibernate.dialect.PostgreSQL95alect
+      dialect: org.hibernate.dialect.PostgreSQL95Dialect
       ddl-auto: validate
     open-in-view: true
     show-sql: false

@@ -48,7 +48,7 @@ public class CustomerController extends ControllerDefault {
         }
     }
 
-    @GetMapping("/balance/{id}")
+    @GetMapping("/{id}/balance")
     public ResponseEntity<CustomerBalanceVO> findBalance(@PathVariable("id") UUID customerId) {
         try {
             return ResponseEntity.ok(customerService.findBalance(customerId));
@@ -109,7 +109,7 @@ public class CustomerController extends ControllerDefault {
         }
     }
 
-    @PutMapping("/{id}/change-plan")
+    @PutMapping("/{id}/plan")
     public ResponseEntity<Void> changePlan(@PathVariable("id") UUID customerId,
                                            @RequestParam("plan") UUID planId) {
         try {

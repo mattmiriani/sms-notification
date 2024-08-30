@@ -10,12 +10,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,6 +42,12 @@ public class PlanServiceTest {
         planId = UUID.randomUUID();
         plan = new Plan();
         plan.setId(planId);
+        plan.setType(PlanType.Credit);
+        plan.setMessageAmount(BigDecimal.valueOf(10));
+        plan.setCredit(BigDecimal.valueOf(50));
+        plan.setActive(true);
+        plan.setCreatedAt(LocalDateTime.now());
+        plan.setUpdatedAt(LocalDateTime.now());
     }
 
     @Test
@@ -109,6 +117,7 @@ public class PlanServiceTest {
     void testUpdate() {
         Plan updatedPlan = new Plan();
         updatedPlan.setId(planId);
+        updatedPlan.setActive(true);
         when(planRepository.findById(planId)).thenReturn(Optional.of(plan));
         when(planRepository.save(any(Plan.class))).thenReturn(updatedPlan);
 
@@ -117,7 +126,7 @@ public class PlanServiceTest {
         assertNotNull(result);
         assertEquals(planId, result.getId());
         verify(planRepository).findById(planId);
-        verify(planRepository).save(updatedPlan);
+        verify(planRepository).save(Mockito.any(Plan.class));
     }
 
     @Test

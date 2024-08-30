@@ -19,6 +19,7 @@ public class Plan implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(generator = "UUID")
     @Column(name = "id", nullable = false, unique = true)
     private UUID id;
 
@@ -42,7 +43,6 @@ public class Plan implements Serializable {
     private LocalDateTime updatedAt;
 
     public Plan(Plan plan) {
-        this.id = UUID.randomUUID();
         this.type = plan.getType();
         this.messageAmount = plan.getMessageAmount();
         this.credit = plan.getCredit();
@@ -55,6 +55,7 @@ public class Plan implements Serializable {
         this.type = plan.getType();
         this.messageAmount = plan.getMessageAmount();
         this.credit = plan.getCredit();
+        this.active = plan.getActive();
         this.updatedAt = LocalDateTime.now();
     }
 }
