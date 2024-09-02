@@ -17,7 +17,7 @@ const MessagePage: React.FC = () => {
     phoneNumber: '',
     whatsApp: false,
     text: '',
-    customerId: ''  // Considerando que o customerId será preenchido automaticamente
+    customerId: ''
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

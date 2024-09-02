@@ -54,7 +54,7 @@ h2 {
   margin-top: 0;
   font-size: 1.5rem;
   text-align: center;
-  color: var(--text-color-default); /* Texto branco */
+  color: var(--text-color-default);
 }
 
 form {
@@ -87,7 +87,7 @@ select {
   border-radius: 6px;
   font-size: 1rem;
   color: var(--text-color-default);
-  background-color: #ffffff !important; /* Fundo branco com !important */
+  background-color: #ffffff !important;
 }
 
 input[type="text"]:focus,
@@ -104,7 +104,7 @@ button[type="submit"] {
   border: none;
   border-radius: 6px;
   background-color: var(--button-color);
-  color: var(--text-color-default); /* Texto branco */
+  color: var(--text-color-default);
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -134,7 +134,7 @@ button[type="submit"]:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--text-color-secondary); /* Fundo do slider */
+  background-color: var(--text-color-secondary);
   transition: 0.4s;
   border-radius: 34px;
 }
@@ -147,7 +147,7 @@ button[type="submit"]:hover {
   border-radius: 50%;
   left: 4px;
   bottom: 4px;
-  background-color: var(--background-color-secondary); /* Fundo do botão deslizante */
+  background-color: var(--background-color-secondary);
   transition: 0.4s;
 }
 

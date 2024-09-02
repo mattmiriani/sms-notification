@@ -1,16 +1,15 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Importa o hook useNavigate
-import style from './style.module.css'; // Certifique-se de que o caminho está correto
+import { useNavigate } from 'react-router-dom';
+
+import style from './style.module.css'; 
 
 const LoginPage: React.FC = () => {
-  const navigate = useNavigate(); // Inicializa o hook useNavigate
+  const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Impede o comportamento padrão do formulário
+    event.preventDefault();
 
-    // Aqui você pode adicionar a lógica para autenticação, se necessário
-
-    // Redireciona para a página /Home após o envio do formulário
+    
     navigate('/Customer');
   };
 

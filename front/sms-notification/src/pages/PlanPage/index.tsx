@@ -11,7 +11,6 @@ export type Plan = {
   id: string;
   name: string;
   price: string;
-  // Adicione outros campos de plano se necessário
 };
 
 const PlanPage: React.FC = () => {
@@ -82,8 +81,7 @@ const PlanPage: React.FC = () => {
             title={selectedPlan ? "Editar Plano" : "Cadastrar Plano"}
             fields={[
               { label: 'Nome', name: 'name', type: 'text' },
-              { label: 'Preço', name: 'price', type: 'text' },
-              // outros campos de plano...
+              { label: 'Preço', name: 'price', type: 'text' }
             ]}
             formData={formData}
             isOpen={isModalOpen}

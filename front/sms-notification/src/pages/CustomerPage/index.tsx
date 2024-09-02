@@ -53,7 +53,7 @@ const CustomerPage: React.FC = () => {
     };
 
     fetchCustomers();
-  }, []); // O array vazio como segundo argumento garante que isso será executado apenas uma vez quando o componente for montado
+  }, []);
 
   const handleOpenModal = (id: string) => {
     if (id) {
