@@ -19,6 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor(onConstructor_ = @__(@Autowired))
 @RestController
 @RequestMapping("/customers")
+@CrossOrigin(origins = "http://localhost:5173")
 public class CustomerController extends ControllerDefault {
 
     private final CustomerService customerService;
